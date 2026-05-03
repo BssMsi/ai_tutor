@@ -1,0 +1,864 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Antigravity IDE Backend",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/health": {
+      "get": {
+        "tags": [
+          "Health"
+        ],
+        "summary": "Health Check",
+        "operationId": "health_check_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/chat/stream": {
+      "post": {
+        "tags": [
+          "Chat"
+        ],
+        "summary": "Chat Stream",
+        "description": "Main entry point for chat. Streams responses.",
+        "operationId": "chat_stream_api_v1_chat_stream_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChatRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/onboarding/{user_id}": {
+      "get": {
+        "tags": [
+          "Onboarding"
+        ],
+        "summary": "Get Onboarding State",
+        "description": "Get current onboarding state for a user. Returns mocked data for now.",
+        "operationId": "get_onboarding_state_api_v1_onboarding__user_id__get",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "User Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OnboardingStateResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Onboarding"
+        ],
+        "summary": "Update Onboarding State",
+        "description": "Update onboarding state for a user.",
+        "operationId": "update_onboarding_state_api_v1_onboarding__user_id__post",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "User Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OnboardingUpdateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OnboardingStateResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/plans/": {
+      "post": {
+        "tags": [
+          "Plans"
+        ],
+        "summary": "Create Plan",
+        "description": "Create a new study plan.",
+        "operationId": "create_plan_api_v1_plans__post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PlanCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlanResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/plans/{plan_id}": {
+      "get": {
+        "tags": [
+          "Plans"
+        ],
+        "summary": "Get Plan",
+        "description": "Get plan details.",
+        "operationId": "get_plan_api_v1_plans__plan_id__get",
+        "parameters": [
+          {
+            "name": "plan_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Plan Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlanResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/plans/{plan_id}/tasks": {
+      "post": {
+        "tags": [
+          "Plans"
+        ],
+        "summary": "Create Task",
+        "description": "Create a new task within a plan.",
+        "operationId": "create_task_api_v1_plans__plan_id__tasks_post",
+        "parameters": [
+          {
+            "name": "plan_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Plan Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PlanTaskCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlanTaskResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/documents/": {
+      "post": {
+        "tags": [
+          "Documents"
+        ],
+        "summary": "Upload Document",
+        "description": "Upload a document for processing.",
+        "operationId": "upload_document_api_v1_documents__post",
+        "parameters": [
+          {
+            "name": "plan_id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Plan Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_upload_document_api_v1_documents__post"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DocumentResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/documents/{document_id}/status": {
+      "get": {
+        "tags": [
+          "Documents"
+        ],
+        "summary": "Get Document Status",
+        "description": "Poll document processing status.",
+        "operationId": "get_document_status_api_v1_documents__document_id__status_get",
+        "parameters": [
+          {
+            "name": "document_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Document Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DocumentResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/webhooks/whatsapp": {
+      "post": {
+        "tags": [
+          "Webhooks"
+        ],
+        "summary": "Whatsapp Webhook",
+        "description": "Receive WhatsApp messages.",
+        "operationId": "whatsapp_webhook_api_v1_webhooks_whatsapp_post",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/webhooks/telegram": {
+      "post": {
+        "tags": [
+          "Webhooks"
+        ],
+        "summary": "Telegram Webhook",
+        "description": "Receive Telegram messages.",
+        "operationId": "telegram_webhook_api_v1_webhooks_telegram_post",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Body_upload_document_api_v1_documents__post": {
+        "properties": {
+          "file": {
+            "type": "string",
+            "contentMediaType": "application/octet-stream",
+            "title": "File"
+          }
+        },
+        "type": "object",
+        "required": [
+          "file"
+        ],
+        "title": "Body_upload_document_api_v1_documents__post"
+      },
+      "ChatMessage": {
+        "properties": {
+          "role": {
+            "type": "string",
+            "title": "Role"
+          },
+          "content": {
+            "type": "string",
+            "title": "Content"
+          }
+        },
+        "type": "object",
+        "required": [
+          "role",
+          "content"
+        ],
+        "title": "ChatMessage"
+      },
+      "ChatRequest": {
+        "properties": {
+          "user_id": {
+            "type": "string",
+            "title": "User Id"
+          },
+          "plan_id": {
+            "type": "string",
+            "title": "Plan Id"
+          },
+          "messages": {
+            "items": {
+              "$ref": "#/components/schemas/ChatMessage"
+            },
+            "type": "array",
+            "title": "Messages"
+          }
+        },
+        "type": "object",
+        "required": [
+          "user_id",
+          "plan_id",
+          "messages"
+        ],
+        "title": "ChatRequest"
+      },
+      "DocumentResponse": {
+        "properties": {
+          "plan_id": {
+            "type": "string",
+            "title": "Plan Id"
+          },
+          "filename": {
+            "type": "string",
+            "title": "Filename"
+          },
+          "status": {
+            "$ref": "#/components/schemas/DocumentStatus",
+            "default": "uploaded"
+          },
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          },
+          "updated_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Updated At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "plan_id",
+          "filename",
+          "id",
+          "created_at",
+          "updated_at"
+        ],
+        "title": "DocumentResponse"
+      },
+      "DocumentStatus": {
+        "type": "string",
+        "enum": [
+          "uploaded",
+          "processing",
+          "ready",
+          "failed"
+        ],
+        "title": "DocumentStatus"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "OnboardingStateResponse": {
+        "properties": {
+          "user_id": {
+            "type": "string",
+            "title": "User Id"
+          },
+          "plan_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Plan Id"
+          },
+          "status": {
+            "$ref": "#/components/schemas/OnboardingStatus",
+            "default": "not_started"
+          },
+          "collected_params": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Collected Params",
+            "default": {}
+          },
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          },
+          "updated_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Updated At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "user_id",
+          "id",
+          "created_at",
+          "updated_at"
+        ],
+        "title": "OnboardingStateResponse"
+      },
+      "OnboardingStatus": {
+        "type": "string",
+        "enum": [
+          "not_started",
+          "in_progress",
+          "completed_minimum",
+          "completed_full"
+        ],
+        "title": "OnboardingStatus"
+      },
+      "OnboardingUpdateRequest": {
+        "properties": {
+          "collected_params": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Collected Params"
+          }
+        },
+        "type": "object",
+        "required": [
+          "collected_params"
+        ],
+        "title": "OnboardingUpdateRequest"
+      },
+      "PlanCreate": {
+        "properties": {
+          "user_id": {
+            "type": "string",
+            "title": "User Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "status": {
+            "$ref": "#/components/schemas/PlanStatus",
+            "default": "active"
+          }
+        },
+        "type": "object",
+        "required": [
+          "user_id",
+          "name"
+        ],
+        "title": "PlanCreate"
+      },
+      "PlanResponse": {
+        "properties": {
+          "user_id": {
+            "type": "string",
+            "title": "User Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "status": {
+            "$ref": "#/components/schemas/PlanStatus",
+            "default": "active"
+          },
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          },
+          "updated_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Updated At"
+          },
+          "tasks": {
+            "items": {
+              "$ref": "#/components/schemas/PlanTaskResponse"
+            },
+            "type": "array",
+            "title": "Tasks",
+            "default": []
+          }
+        },
+        "type": "object",
+        "required": [
+          "user_id",
+          "name",
+          "id",
+          "created_at",
+          "updated_at"
+        ],
+        "title": "PlanResponse"
+      },
+      "PlanStatus": {
+        "type": "string",
+        "enum": [
+          "active",
+          "archived"
+        ],
+        "title": "PlanStatus"
+      },
+      "PlanTaskCreate": {
+        "properties": {
+          "topic": {
+            "type": "string",
+            "title": "Topic"
+          },
+          "scheduled_date": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Scheduled Date"
+          },
+          "estimated_minutes": {
+            "type": "integer",
+            "title": "Estimated Minutes",
+            "default": 30
+          },
+          "status": {
+            "$ref": "#/components/schemas/PlanTaskStatus",
+            "default": "pending"
+          },
+          "revision_round": {
+            "type": "integer",
+            "title": "Revision Round",
+            "default": 1
+          }
+        },
+        "type": "object",
+        "required": [
+          "topic",
+          "scheduled_date"
+        ],
+        "title": "PlanTaskCreate"
+      },
+      "PlanTaskResponse": {
+        "properties": {
+          "topic": {
+            "type": "string",
+            "title": "Topic"
+          },
+          "scheduled_date": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Scheduled Date"
+          },
+          "estimated_minutes": {
+            "type": "integer",
+            "title": "Estimated Minutes",
+            "default": 30
+          },
+          "status": {
+            "$ref": "#/components/schemas/PlanTaskStatus",
+            "default": "pending"
+          },
+          "revision_round": {
+            "type": "integer",
+            "title": "Revision Round",
+            "default": 1
+          },
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "plan_id": {
+            "type": "string",
+            "title": "Plan Id"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "topic",
+          "scheduled_date",
+          "id",
+          "plan_id",
+          "created_at"
+        ],
+        "title": "PlanTaskResponse"
+      },
+      "PlanTaskStatus": {
+        "type": "string",
+        "enum": [
+          "pending",
+          "done",
+          "skip"
+        ],
+        "title": "PlanTaskStatus"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "ctx": {
+            "type": "object",
+            "title": "Context"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      }
+    }
+  }
+}
